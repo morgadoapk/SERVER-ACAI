@@ -54,34 +54,25 @@ module.exports = class UserController {
             }
         )
 
-        await main().then(async() => {
-            try {
-                
-                await newUser.save()
-    
-                return res.status(201).json (
-                    {
-                        error: false,
-                        message: 'Conta registrada com sucesso!'
-                    }
-                )
-    
-            } catch (error) {
-                return res.status(501).json (
-                    {
-                        error: true,
-                        message: "Error inesperado no servidor, tente novamente mais tarde!"
-                    }
-                )
-            }
-        }).catch(() => {
+        try {
+            
+            await newUser.save()
+
+            return res.status(201).json (
+                {
+                    error: false,
+                    message: 'Conta registrada com sucesso!'
+                }
+            )
+
+        } catch (error) {
             return res.status(501).json (
                 {
                     error: true,
                     message: "Error inesperado no servidor, tente novamente mais tarde!"
                 }
             )
-        })
+        }
     }
 
     static async login(req, res) {
@@ -104,46 +95,35 @@ module.exports = class UserController {
             )           
         }
 
-        main().then(async() => {
-            console.log('chegou aqui')
-            const searchUser = await User.findOne({nome: nome}).catch(error => {console.log(error)})
-            console.log('chegou aqui 2')
-            
-            if(!searchUser) {
-                return res.status(422).json (
-                    {
-                        error: true,
-                        message: 'Conta invalida!'
-                    }
-                )
-            }
-    
-            if(searchUser.senha !== senha) {
-                return res.status(422).json (
-                    {
-                        error: true,
-                        message: 'Senha invalida!'
-                    }
-                )
-            }
-    
-            const token = createToken(searchUser)
-    
-            return res.status(200).json (
-                {
-                    error: false,
-                    message: 'Login com sucesso',
-                    token: token
-                }
-            )
-        }).catch(() => {
-            return res.status(501).json (
+        const searchUser = await User.findOne({nome: nome})
+        
+        if(!searchUser) {
+            return res.status(422).json (
                 {
                     error: true,
-                    message: "Error inesperado no servidor, tente novamente mais tarde!"
+                    message: 'Conta invalida!'
                 }
             )
-        })
+        }
+
+        if(searchUser.senha !== senha) {
+            return res.status(422).json (
+                {
+                    error: true,
+                    message: 'Senha invalida!'
+                }
+            )
+        }
+
+        const token = createToken(searchUser)
+
+        return res.status(200).json (
+            {
+                error: false,
+                message: 'Login com sucesso',
+                token: token
+            }
+        )
     }
 
     static async pedirQuentinhas(req, res) {
@@ -179,60 +159,49 @@ module.exports = class UserController {
 
         const dataAtual = getDataAtual().data.toString()
 
-        await main().then(async() => {
+        try {
 
-            try {
-    
-                const quantidade = quentinhas.length
-    
-                const verifyQuentinha = await Cardapio.findOne({data: dataAtual})
-    
-                if(!verifyQuentinha) {
-                    return res.status(200).json (
-                        {
-                            error: false,
-                            message: `Aguardando o cardapio de hoje...`,
-                        }
-                    )         
-                }
-    
-                await Cardapio.updateOne (
-                    {
-                        data: dataAtual
-                    },
-                    {
-                        $push: {
-                            quentinhas: {
-                                nome: nome,
-                                quantidade: quantidade,
-                                quentinhas: quentinhas
-                            }
-                        }
-                    }
-                )
-        
+            const quantidade = quentinhas.length
+
+            const verifyQuentinha = await Cardapio.findOne({data: dataAtual})
+
+            if(!verifyQuentinha) {
                 return res.status(200).json (
                     {
                         error: false,
-                        message: `PEDIDO ENVIADO!. quantidade: ${quantidade} - data: ${dataAtual}`,
+                        message: `Aguardando o cardapio de hoje...`,
                     }
-                )
-            } catch (error) {
-                return res.status(501).json (
-                    {
-                        error: true,
-                        message: 'ERROR! inesperado no servidor. Tente novamente mais tarde!'
-                    }
-                )
+                )         
             }
-        }).catch(() => {
+
+            await Cardapio.updateOne (
+                {
+                    data: dataAtual
+                },
+                {
+                    $push: {
+                        quentinhas: {
+                            nome: nome,
+                            quantidade: quantidade,
+                            quentinhas: quentinhas
+                        }
+                    }
+                }
+            )
+    
+            return res.status(200).json (
+                {
+                    error: false,
+                    message: `PEDIDO ENVIADO!. quantidade: ${quantidade} - data: ${dataAtual}`,
+                }
+            )
+        } catch (error) {
             return res.status(501).json (
                 {
                     error: true,
-                    message: "Error inesperado no servidor, tente novamente mais tarde!"
+                    message: 'ERROR! inesperado no servidor. Tente novamente mais tarde!'
                 }
             )
-        })
-
+        }
     }
 }

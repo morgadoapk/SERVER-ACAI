@@ -1,160 +1,116 @@
 const Financeiro = require("../models/Financeiro")
 const Cardapio = require('../models/Cardapio')
 const User = require('../models/User')
-const {main} = require('../db/conn')
 const getDataAtual = require("../utils/get-data")
-const mongoose = require('mongoose')
 
 module.exports = class AdmController {
-
     static async getQuentinhasdoDia(req, res) {
-
         const dataAtual = getDataAtual().data.toString()
 
-        await main(async() => {
-            try {
-                const quentinhas = await Cardapio.findOne({data: dataAtual}).select(['quentinhas', 'data'])
-    
-                if(!quentinhas || quentinhas.length === 0) {
-                    return res.status(404).json (
-                        {
-                            error: true,
-                            message: 'Não há quentinhas cadastradas!',
-                            dados: null
-                        }
-                    )    
-                }
-    
-                return res.status(200).json (
-                    {
-                        error: false,
-                        message: 'Quentinhas encontradas com sucesso!',
-                        dados: quentinhas
-                    }
-                )
-            } catch (error) {
-                return res.status(501).json (
+        try {
+            const quentinhas = await Cardapio.findOne({data: dataAtual}).select(['quentinhas', 'data'])
+
+            if(!quentinhas || quentinhas.length === 0) {
+                return res.status(404).json (
                     {
                         error: true,
-                        message: 'Error no inesperado no servidor!'
+                        message: 'Não há quentinhas cadastradas!',
+                        dados: null
                     }
-                )
+                )    
             }
-        }).catch(() => {
+
+            return res.status(200).json (
+                {
+                    error: false,
+                    message: 'Quentinhas encontradas com sucesso!',
+                    dados: quentinhas
+                }
+            )
+        } catch (error) {
             return res.status(501).json (
                 {
                     error: true,
-                    message: "Error inesperado no servidor, tente novamente mais tarde!"
+                    message: 'Error no inesperado no servidor!'
                 }
             )
-        })
+        }
     }
 
     static async getQuentinhas(req, res) {
-        await main().then(async()=>{
-            try {
-                const quentinhas = await Cardapio.find().select(['quentinhas', 'data']).sort('-createdAt')
-    
-                if(!quentinhas || quentinhas.length === 0) {
-                    return res.status(200).json (
-                        {
-                            error: true,
-                            message: 'Não há quentinhas cadastradas!',
-                            dados: null
-                        }
-                    )    
-                }
-    
+        try {
+            const quentinhas = await Cardapio.find().select(['quentinhas', 'data']).sort('-createdAt')
+
+            if(!quentinhas || quentinhas.length === 0) {
                 return res.status(200).json (
                     {
-                        error: false,
-                        message: 'Quentinhas encontradas com sucesso!',
-                        dados: quentinhas
-                    }
-                )
-            } catch (error) {
-                return res.status(501).json (
-                    {
                         error: true,
-                        message: 'Error no inesperado no servidor!'
+                        message: 'Não há quentinhas cadastradas!',
+                        dados: null
                     }
-                )
+                )    
             }
-        }).catch(() => {
+
+            return res.status(200).json (
+                {
+                    error: false,
+                    message: 'Quentinhas encontradas com sucesso!',
+                    dados: quentinhas
+                }
+            )
+        } catch (error) {
             return res.status(501).json (
                 {
                     error: true,
-                    message: "Error inesperado no servidor, tente novamente mais tarde!"
+                    message: 'Error no inesperado no servidor!'
                 }
             )
-        })
+        }
     }
 
     static async getContasCadastradas(req, res) {
+        const getContas = await User.find({})
 
-        await main().then(async()=>{
-            const getContas = await User.find({})
-    
-            if(!getContas) {
-                return res.status(422).json (
-                    {
-                        error: true,
-                        message: 'Não há contas registradas!'
-                    }
-                )
-            }
-    
-            return res.status(200).json (
-                {
-                    error: false,
-                    message: 'Contas encontradas com sucesso!',
-                    dados: getContas
-                }
-            )
-        }).catch(() => {
-            return res.status(501).json (
+        if(!getContas) {
+            return res.status(422).json (
                 {
                     error: true,
-                    message: "Error inesperado no servidor, tente novamente mais tarde!"
+                    message: 'Não há contas registradas!'
                 }
             )
-        })
+        }
+
+        return res.status(200).json (
+            {
+                error: false,
+                message: 'Contas encontradas com sucesso!',
+                dados: getContas
+            }
+        )
     }
 
     static async getCardapios(req, res) {
+        const cardapios = await Cardapio.find({}).sort('-createdAt')
 
-        await main().then(async()=>{
-            
-            const cardapios = await Cardapio.find({}).sort('-createdAt')
-    
-            if(!cardapios || cardapios.length === 0) {
-                return res.status(422).json (
-                    {
-                        error: true,
-                        message: 'Não há cadapios cadastrados!'
-                    }
-                )
-            }
-    
-            return res.status(200).json (
-                {
-                    error: false,
-                    message: 'Cardapios encontrados!',
-                    dados: cardapios
-                }
-            )
-        }).catch(() => {
-            return res.status(501).json (
+        if(!cardapios || cardapios.length === 0) {
+            return res.status(422).json (
                 {
                     error: true,
-                    message: "Error inesperado no servidor, tente novamente mais tarde!"
+                    message: 'Não há cadapios cadastrados!'
                 }
             )
-        })
+        }
+
+        return res.status(200).json (
+            {
+                error: false,
+                message: 'Cardapios encontrados!',
+                dados: cardapios
+            }
+        )
     }
 
     static async getCardapioDia(req, res) {
-        
         const dataAtual = getDataAtual().data.toString()
 
         await main().then(async()=>{
@@ -174,13 +130,6 @@ module.exports = class AdmController {
                     error: false,
                     message: 'Cardapios encontrados!',
                     dados: cardapio
-                }
-            )
-        }).catch(() => {
-            return res.status(501).json (
-                {
-                    error: true,
-                    message: "Error inesperado no servidor, tente novamente mais tarde!"
                 }
             )
         })
@@ -222,44 +171,35 @@ module.exports = class AdmController {
 
         const dataAtual = getDataAtual().data.toString()
 
-        await main().then(async()=>{
-            const newCardapio = await new Cardapio (
+        const newCardapio = await new Cardapio (
+            {
+                proteina,
+                feijao,
+                arroz,
+                macarrao,
+                salada,
+                extra,
+                data: dataAtual
+            }
+        )
+
+        try {
+            await newCardapio.save()
+
+            return res.status(201).json (
                 {
-                    proteina,
-                    feijao,
-                    arroz,
-                    macarrao,
-                    salada,
-                    extra,
-                    data: dataAtual
+                    error: false,
+                    message: 'Almoço cadastrado com sucesso!'
                 }
             )
-    
-            try {
-                await newCardapio.save()
-    
-                return res.status(201).json (
-                    {
-                        error: false,
-                        message: 'Almoço cadastrado com sucesso!'
-                    }
-                )
-            } catch (error) {
-                return res.status(501).json (
-                    {
-                        error: true,
-                        message: 'Error inesperado ao "CADASTRAR CARDAPIO" no servidor. tente novamente mais tarde!'
-                    }
-                )
-            }
-        }).catch(() => {
+        } catch (error) {
             return res.status(501).json (
                 {
                     error: true,
-                    message: "Error inesperado no servidor, tente novamente mais tarde!"
+                    message: 'Error inesperado ao "CADASTRAR CARDAPIO" no servidor. tente novamente mais tarde!'
                 }
             )
-        })
+        }
     }
 
     static async add(req, res) {
@@ -329,36 +269,26 @@ module.exports = class AdmController {
             descricao = 'Sem descricao...'
         }
 
-        await main().then(async() => {
-            const newFinanc = await new Financeiro({
-                nome, valor, descricao, data, tipo
-            })
-    
-            try {
-                await newFinanc.save()
-                return res.status(201).json (
-                    {
-                        error: false,
-                        message: 'Adicionado com sucesso!'
-                    }
-                )
-            } catch (error) {
-                return res.status(501).json (
-                    {
-                        error: false,
-                        message: 'Error inesperado no servidor.'
-                    }
-                )
-            }
-        }).catch(() => {
-            return res.status(501).json (
-                {
-                    error: true,
-                    message: "Error inesperado no servidor, tente novamente mais tarde!"
-                }
-            )
+        const newFinanc = await new Financeiro({
+            nome, valor, descricao, data, tipo
         })
 
+        try {
+            await newFinanc.save()
+            return res.status(201).json (
+                {
+                    error: false,
+                    message: 'Adicionado com sucesso!'
+                }
+            )
+        } catch (error) {
+            return res.status(501).json (
+                {
+                    error: false,
+                    message: 'Error inesperado no servidor.'
+                }
+            )
+        }
     }
 
     static async getInfoQuentinhas(req, res) {
@@ -372,99 +302,60 @@ module.exports = class AdmController {
             data = dataAtual
         }
 
-        await main().then(async() => {
-            const getCardapio = await Cardapio.findOne({ data }).sort('-createdAt')
-    
-            if(!getCardapio) {
-                return res.status(200).json (
-                    {
-                        error: true,
-                        message: `Aguardando o cardápio...`
-                    }
-                )         
-            }
-    
-            await getCardapio.quentinhas.forEach((e, i) => {
-                quantidadeQuentinhas += e.quantidade
-                arrayNomeQuantidade.push (
-                    {
-                        nome: e.nome, 
-                        quantidade: e.quantidade
-                    }
-                )
-            })
-    
+        const getCardapio = await Cardapio.findOne({ data }).sort('-createdAt')
+
+        if(!getCardapio) {
             return res.status(200).json (
                 {
-                    error: false,
-                    message: 'Get info com sucesso!',
-                    dados: {
-                        quantidade_quentinhas: quantidadeQuentinhas,
-                        infoNomeQuantidade: arrayNomeQuantidade,
-                        cardapio: getCardapio.proteina
-                    }
-                }
-            )
-        }).catch(() => {
-            return res.status(501).json (
-                {
                     error: true,
-                    message: "Error inesperado no servidor, tente novamente mais tarde!"
+                    message: `Aguardando o cardápio...`
+                }
+            )         
+        }
+
+        await getCardapio.quentinhas.forEach((e, i) => {
+            quantidadeQuentinhas += e.quantidade
+            arrayNomeQuantidade.push (
+                {
+                    nome: e.nome, 
+                    quantidade: e.quantidade
                 }
             )
         })
+
+        return res.status(200).json (
+            {
+                error: false,
+                message: 'Get info com sucesso!',
+                dados: {
+                    quantidade_quentinhas: quantidadeQuentinhas,
+                    infoNomeQuantidade: arrayNomeQuantidade,
+                    cardapio: getCardapio.proteina
+                }
+            }
+        )
     }
 
     static async read(req, res) {
+        const todasNotas = await Financeiro.find()
 
-        await main().then(async() => {
-            const todasNotas = await Financeiro.find()
-    
-            if(!todasNotas) {
-                return res.status(401).json(
-                    {
-                        error: true,
-                        message: 'Dados nao encontrados!'
-                    }
-                )
-            }
-    
-            return res.status(200).json(
-                {
-                    error: false,
-                    message: 'Dados retornados com sucesso!',
-                    dados: {
-                        todasNotas
-                    }
-                }
-            )
-        }).catch(() => {
-            return res.status(501).json (
+        if(!todasNotas) {
+            return res.status(401).json(
                 {
                     error: true,
-                    message: "Error inesperado no servidor, tente novamente mais tarde!"
+                    message: 'Dados nao encontrados!'
                 }
             )
-        })
-    }
+        }
 
-    static async teste(req, res) {
-        console.log('veio aqui')
-        mongoose.connect(`mongodb+srv://admin:86042781sa@sistema.jensb.mongodb.net/sistema?retryWrites=true&w=majority`).catch((error) => {
-            console.log(error)
-        }).then(() => {
-            console.log('conectou')
-        })
-         console.log('passou')
-        //  await main().then(async() => {
-        //     return res.status(200).json('teste')
-        // }).catch(() => {
-        //     return res.status(501).json (
-        //         {
-        //             error: true,
-        //             message: "Error inesperado no servidor, tente novamente mais tarde!"
-        //         }
-        //     )
-        // })
+        return res.status(200).json(
+            {
+                error: false,
+                message: 'Dados retornados com sucesso!',
+                dados: {
+                    todasNotas
+                }
+            }
+        )
     }
 }
