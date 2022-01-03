@@ -54,7 +54,7 @@ module.exports = class UserController {
             }
         )
 
-        await main().then(() => {
+        await main().then(async() => {
             try {
                 
                 await newUser.save()
@@ -105,7 +105,7 @@ module.exports = class UserController {
             )           
         }
 
-        await main().then(() => {
+        await main().then(async() => {
             const searchUser = await User.findOne({nome: nome}).catch(error => {console.log(error)})
             
             if(!searchUser) {
@@ -178,7 +178,7 @@ module.exports = class UserController {
 
         const dataAtual = getDataAtual().data.toString()
 
-        await main().then(() => {
+        await main().then(async() => {
 
             try {
     

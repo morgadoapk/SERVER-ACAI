@@ -10,7 +10,7 @@ module.exports = class AdmController {
 
         const dataAtual = getDataAtual().data.toString()
 
-        await main(() => {
+        await main(async() => {
             try {
                 const quentinhas = await Cardapio.findOne({data: dataAtual}).select(['quentinhas', 'data'])
     
@@ -50,7 +50,7 @@ module.exports = class AdmController {
     }
 
     static async getQuentinhas(req, res) {
-        await main().then(()=>{
+        await main().then(async()=>{
             try {
                 const quentinhas = await Cardapio.find().select(['quentinhas', 'data']).sort('-createdAt')
     
@@ -91,7 +91,7 @@ module.exports = class AdmController {
 
     static async getContasCadastradas(req, res) {
 
-        await main().then(()=>{
+        await main().then(async()=>{
             const getContas = await User.find({})
     
             if(!getContas) {
@@ -122,7 +122,7 @@ module.exports = class AdmController {
 
     static async getCardapios(req, res) {
 
-        await main().then(()=>{
+        await main().then(async()=>{
             
             const cardapios = await Cardapio.find({}).sort('-createdAt')
     
@@ -156,7 +156,7 @@ module.exports = class AdmController {
         
         const dataAtual = getDataAtual().data.toString()
 
-        await main().then(()=>{
+        await main().then(async()=>{
             const cardapio = await Cardapio.findOne({data: dataAtual}).select(['-quentinhas', '-createdAt', '-updatedAt', '-__v'])
     
             if(!cardapio || cardapio.length === 0) {
@@ -221,7 +221,7 @@ module.exports = class AdmController {
 
         const dataAtual = getDataAtual().data.toString()
 
-        await main().then(()=>{
+        await main().then(async()=>{
             const newCardapio = await new Cardapio (
                 {
                     proteina,
@@ -328,7 +328,7 @@ module.exports = class AdmController {
             descricao = 'Sem descricao...'
         }
 
-        await main().then(() => {
+        await main().then(async() => {
             const newFinanc = await new Financeiro({
                 nome, valor, descricao, data, tipo
             })
@@ -371,7 +371,7 @@ module.exports = class AdmController {
             data = dataAtual
         }
 
-        await main().then(() => {
+        await main().then(async() => {
             const getCardapio = await Cardapio.findOne({ data }).sort('-createdAt')
     
             if(!getCardapio) {
@@ -416,7 +416,7 @@ module.exports = class AdmController {
 
     static async read(req, res) {
 
-        await main().then(() => {
+        await main().then(async() => {
             const todasNotas = await Financeiro.find()
     
             if(!todasNotas) {
