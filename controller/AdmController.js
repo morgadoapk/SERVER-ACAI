@@ -449,8 +449,7 @@ module.exports = class AdmController {
 
     static async teste(req, res) {
          await main().then(async() => {
-            const todasNotas = await Financeiro.find()
-            res.status(200).json(todasNotas)
+            res.status(200).json('teste')
         }).catch(() => {
             return res.status(501).json (
                 {
