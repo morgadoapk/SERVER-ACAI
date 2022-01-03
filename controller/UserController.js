@@ -105,7 +105,9 @@ module.exports = class UserController {
         }
 
         await main().then(async() => {
+            console.log('chegou aqui')
             const searchUser = await User.findOne({nome: nome}).catch(error => {console.log(error)})
+            console.log('chegou aqui 2')
             
             if(!searchUser) {
                 return res.status(422).json (
