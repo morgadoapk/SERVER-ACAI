@@ -113,26 +113,24 @@ module.exports = class AdmController {
     static async getCardapioDia(req, res) {
         const dataAtual = getDataAtual().data.toString()
 
-        await main().then(async()=>{
-            const cardapio = await Cardapio.findOne({data: dataAtual}).select(['-quentinhas', '-createdAt', '-updatedAt', '-__v'])
-    
-            if(!cardapio || cardapio.length === 0) {
-                return res.status(422).json (
-                    {
-                        error: true,
-                        message: `Aguardando o cardápio... ( atualize a pagina para verificar novamente )`
-                    }
-                )
-            }
-    
-            return res.status(200).json (
+        const cardapio = await Cardapio.findOne({data: dataAtual}).select(['-quentinhas', '-createdAt', '-updatedAt', '-__v'])
+
+        if(!cardapio || cardapio.length === 0) {
+            return res.status(422).json (
                 {
-                    error: false,
-                    message: 'Cardapios encontrados!',
-                    dados: cardapio
+                    error: true,
+                    message: `Aguardando o cardápio... ( atualize a pagina para verificar novamente )`
                 }
             )
-        })
+        }
+
+        return res.status(200).json (
+            {
+                error: false,
+                message: 'Cardapios encontrados!',
+                dados: cardapio
+            }
+        )
     }
 
     static async addCardapio(req, res) {
