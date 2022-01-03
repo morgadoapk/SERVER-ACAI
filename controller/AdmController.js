@@ -450,7 +450,11 @@ module.exports = class AdmController {
 
     static async teste(req, res) {
         console.log('veio aqui')
-         mongoose.connect(`mongodb+srv://admin:86042781sa@sistema.jensb.mongodb.net/sistema?retryWrites=true&w=majority`)
+        mongoose.connect(`mongodb+srv://admin:86042781sa@sistema.jensb.mongodb.net/sistema?retryWrites=true&w=majority`).catch((error) => {
+            console.log(error)
+        }).then(() => {
+            console.log('conectou')
+        })
          console.log('passou')
         //  await main().then(async() => {
         //     return res.status(200).json('teste')
