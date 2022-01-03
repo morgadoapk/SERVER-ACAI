@@ -19,6 +19,6 @@
   },
   "scripts": {
     "dev": "nodemon ./server.js localhost 5000",
-    "start": "yarn; node ./server.js"
+    "start": "npm install; node ./server.js"
   }
 }
