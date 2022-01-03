@@ -86,8 +86,6 @@ module.exports = class UserController {
 
     static async login(req, res) {
         const { nome, senha } = req.body
-        console.log('AQui')
-
         if(!nome) {
             return res.status(422).json (
                 {
