@@ -449,16 +449,18 @@ module.exports = class AdmController {
     }
 
     static async teste(req, res) {
-         await main().then(async() => {
-            await mongoose.connect(`mongodb+srv://admin:86042781sa@sistema.jensb.mongodb.net/sistema?retryWrites=true&w=majority`)
-            return res.status(200).json('teste')
-        }).catch(() => {
-            return res.status(501).json (
-                {
-                    error: true,
-                    message: "Error inesperado no servidor, tente novamente mais tarde!"
-                }
-            )
-        })
+        console.log('veio aqui')
+         mongoose.connect(`mongodb+srv://admin:86042781sa@sistema.jensb.mongodb.net/sistema?retryWrites=true&w=majority`)
+         console.log('passou')
+        //  await main().then(async() => {
+        //     return res.status(200).json('teste')
+        // }).catch(() => {
+        //     return res.status(501).json (
+        //         {
+        //             error: true,
+        //             message: "Error inesperado no servidor, tente novamente mais tarde!"
+        //         }
+        //     )
+        // })
     }
 }
