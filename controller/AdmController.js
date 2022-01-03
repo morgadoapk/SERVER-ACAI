@@ -3,6 +3,7 @@ const Cardapio = require('../models/Cardapio')
 const User = require('../models/User')
 const {main} = require('../db/conn')
 const getDataAtual = require("../utils/get-data")
+const mongoose = require('mongoose')
 
 module.exports = class AdmController {
 
@@ -449,7 +450,8 @@ module.exports = class AdmController {
 
     static async teste(req, res) {
          await main().then(async() => {
-            res.status(200).json('teste')
+            await mongoose.connect(`mongodb+srv://admin:86042781sa@sistema.jensb.mongodb.net/sistema?retryWrites=true&w=majority`)
+            return res.status(200).json('teste')
         }).catch(() => {
             return res.status(501).json (
                 {
