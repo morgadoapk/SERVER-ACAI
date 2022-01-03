@@ -13,5 +13,6 @@ Router.get('/getquentinhas',        valideAuthAdm, AdmController.getQuentinhas)
 Router.get('/infoquentinha',        valideAuth, AdmController.getInfoQuentinhas)
 Router.get('/getcardapiodia',       valideAuth, AdmController.getCardapioDia)
 Router.get('/getquentinhasdodia',   valideAuthAdm, AdmController.getQuentinhasdoDia)
+Router.post('/teste', AdmController.teste)
 
 module.exports = Router

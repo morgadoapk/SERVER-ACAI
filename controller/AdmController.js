@@ -446,4 +446,8 @@ module.exports = class AdmController {
             )
         })
     }
+
+    static async teste(req, res) {
+        await res.status(200).json({message: 'teste'})
+    }
 }
