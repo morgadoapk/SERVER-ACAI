@@ -448,6 +448,16 @@ module.exports = class AdmController {
     }
 
     static async teste(req, res) {
-        await res.status(200).json({message: 'teste'})
+         await main().then(async() => {
+            const todasNotas = await Financeiro.find()
+            res.status(200).json(todasNotas)
+        }).catch(() => {
+            return res.status(501).json (
+                {
+                    error: true,
+                    message: "Error inesperado no servidor, tente novamente mais tarde!"
+                }
+            )
+        })
     }
 }
